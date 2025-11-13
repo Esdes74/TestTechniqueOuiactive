@@ -10,6 +10,8 @@ Mes axes d'amélioration :
 - Améliorer le système de score (par exemple, en prenant en compte le temps de réponse).
 - Dans le cas d'un quiz multijoueur, réfléchir à une manière de gérer les scores pour qu'aucun enfant ne subisse de moqueries de la part de ses camarades, que ce soit parce qu'il a toujours le score le plus élevé ou, au contraire, le plus bas.
 
+Vous pourrez tester mon module dans la section "Mes contenus", puis dans un contenu de type quiz comme celui du mercredi 29 octobre, ou directement à l'adresse suivante : [http://test_technique/fiches/revision](http://codeelite74.com:3000/fiches/revision?type=quiz)
+
 ## 🚀 Démarrage du projet
 
 ### Prérequis
@@ -53,7 +55,7 @@ Pour lancer le serveur de développement :
 npm run dev
 ```
 
-Le projet sera accessible à l'adresse : [https://test_technique](http://codeelite74.com:3000)
+Le projet sera accessible à l'adresse : [http://test_technique](http://codeelite74.com:3000)
 
 ## 📋 Autres commandes disponibles
 
