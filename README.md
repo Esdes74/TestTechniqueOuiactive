@@ -53,7 +53,7 @@ Pour lancer le serveur de développement :
 npm run dev
 ```
 
-Le projet sera accessible à l'adresse : [https://test_technique](https://codeelite74.com:3000)
+Le projet sera accessible à l'adresse : [https://test_technique](http://codeelite74.com:3000)
 
 ## 📋 Autres commandes disponibles
 
