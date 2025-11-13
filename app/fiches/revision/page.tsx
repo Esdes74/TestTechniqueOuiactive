@@ -10,7 +10,9 @@ export default function RevisionH5PPage() {
   const contentType = searchParams.get("type") || "flashcard"
 
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentScore, setCurrentScore] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)
+  const [isEnded, setIsEnded] = useState(false)
   const [crosswordAnswers, setCrosswordAnswers] = useState<Record<string, string>>({})
   const [timelineExpanded, setTimelineExpanded] = useState<number | null>(null)
 
@@ -97,40 +99,40 @@ export default function RevisionH5PPage() {
     {
 			question: "Qu'est ce qu'une métaphore ?",
 			propositions: [
-				{proposition: "une figure de style", points: 1},
-				{proposition: "une fonction matématique", points: 0},
-				{proposition: "une formule chimique", points: 0},
-				{proposition: "une figure de gym", points: -1},
+				{proposition: "une figure de style", score: 1},
+				{proposition: "une fonction matématique", score: 0},
+				{proposition: "une formule chimique", score: 0},
+				{proposition: "une figure de gym", score: -1},
 			],
 			maxTime: 150,
 		},
 		{
 			question: "Que représente la formule h2o ?",
 			propositions: [
-				{proposition: "du méthane", points: 1},
-				{proposition: "du fer", points: 0},
-				{proposition: "de l'eau", points: 2},
-				{proposition: "du co2", points: -1},
+				{proposition: "du méthane", score: 1},
+				{proposition: "du fer", score: 0},
+				{proposition: "de l'eau", score: 2},
+				{proposition: "du co2", score: -1},
 			],
 			maxTime: 150,
 		},
 		{
 			question: "A quoi sert le théorème de pythagore ?",
 			propositions: [
-				{proposition: "calculer l'aire d'un triangle", points: 0},
-				{proposition: "calculer la longueur de l'hypoténuse d'un triangle", points: 3},
-				{proposition: "calculer une distance", points: 2},
-				{proposition: "calculer le diametre d'un cercle", points: -2},
+				{proposition: "calculer l'aire d'un triangle", score: 0},
+				{proposition: "calculer la longueur de l'hypoténuse d'un triangle", score: 3},
+				{proposition: "calculer une distance", score: 2},
+				{proposition: "calculer le diametre d'un cercle", score: -2},
 			],
 			maxTime: 200,
 		},
 		{
 			question: "quel est la date de l'éxécution de Louis XVI ?",
 			propositions: [
-				{proposition: "1793", points: 2},
-				{proposition: "2012", points: -2},
-				{proposition: "1513", points: 0},
-				{proposition: "1789", points: 1},
+				{proposition: "1793", score: 2},
+				{proposition: "2012", score: -2},
+				{proposition: "1513", score: 0},
+				{proposition: "1789", score: 1},
 			],
 			maxTime: 200,
 		},
@@ -141,6 +143,15 @@ export default function RevisionH5PPage() {
       setCurrentIndex(currentIndex + 1)
       setIsFlipped(false)
     }
+  }
+
+	const handleNextQuiz = (index: number) => {
+		let propositionScore: number = quizz[currentIndex].propositions[index].score
+		setCurrentScore(currentScore + propositionScore)
+		setCurrentIndex(currentIndex + 1)
+    if (currentIndex >= quizz.length - 1) {
+			setIsEnded(true)
+		}
   }
 
   const handlePrevious = () => {
@@ -314,67 +325,95 @@ export default function RevisionH5PPage() {
             </div>
           </div>
         )
+			
+			case "quiz":
+				return (
+					<div className="max-w-4xl mx-auto">
+						{!isEnded ? (
+							<div className="bg-white rounded-[2rem] shadow-xl p-8 min-h-[400px] flex flex-col">
+			 					<div className="flex items-center justify-between mb-6">
+			 						<h2 className="text-2xl font-bold text-slate-900">Quiz surprise</h2>
+			 						<span className="text-slate-500 font-medium">
+			 							{currentIndex + 1} / {quizz.length}
+			 						</span>
+			 					</div>
 
-			// case "quizz":
-			// 	return (
-      //     <div className="max-w-4xl mx-auto">
-      //       <div className="bg-white rounded-[2rem] shadow-xl p-8 min-h-[400px] flex flex-col">
-      //         <div className="flex items-center justify-between mb-6">
-      //           <h2 className="text-2xl font-bold text-slate-900">Les figures de style</h2>
-      //           <span className="text-slate-500 font-medium">
-      //             {currentIndex + 1} / {quizz.length}
-      //           </span>
-      //         </div>
+			 					<div className="flex-1 flex items-center justify-center cursor-pointer">
+			 						<div className="w-full">
+			 							<div className="text-center">
+			 								<div className="text-6xl mb-6">❓</div>
+			 								<p className="text-2xl font-bold text-slate-900 mb-8">
+			 									{quizz[currentIndex].question}
+			 								</p>
+			 							</div>
+			 							<div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto">
+			 								{quizz[currentIndex].propositions.map((item, index) => (
+			 									<button
+			 										key={index}
+			 										onClick={() => handleNextQuiz(index)}
+			 										disabled={false}
+			 										className="flex items-center gap-2 px-6 py-4 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition-colors h-full min-h-[80px]"
+			 									>
+			 										<h1 className="font-medium">{index + 1}.</h1>
+			 										<span className="font-medium">{item.proposition}</span>
+			 									</button>
+			 								))}
+			 							</div>
+			 						</div>
+			 					</div>
+			 				</div>
+						) : (
+							<div className="max-w-4xl mx-auto">
+								<div className="bg-white rounded-[2rem] shadow-xl p-8 text-center">
+									<div className="text-6xl mb-6">🎉</div>
+									<h2 className="text-3xl font-bold text-slate-900 mb-4">
+										Quiz terminé !
+									</h2>
 
-      //         <div
-      //           className="flex-1 flex items-center justify-center cursor-pointer"
-      //           onClick={() => setIsFlipped(!isFlipped)}
-      //         >
-      //           <div className="w-full">
-      //             {!isFlipped ? (
-      //               <div className="text-center">
-      //                 <div className="text-6xl mb-6">❓</div>
-      //                 <p className="text-2xl font-bold text-slate-900 mb-4">{quizz[currentIndex].question}</p>
-      //                 <p className="text-slate-500 text-sm">Cliquez pour voir la réponse</p>
-      //               </div>
-      //             ) : (
-      //               <div className="text-center">
-      //                 <div className="text-6xl mb-6">💡</div>
-      //                 <p className="text-xl font-bold text-slate-900 mb-4">{quizz[currentIndex].answer}</p>
-      //                 <p className="text-slate-600 italic">{quizz[currentIndex].example}</p>
-      //               </div>
-      //             )}
-      //           </div>
-      //         </div>
+									<div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 mb-6 max-w-md mx-auto">
+										<p className="text-slate-600 text-lg mb-2">Votre score final</p>
+										<div className="text-4xl font-bold text-slate-900 mb-2">
+											{currentScore} / 8 {/* 8 is the highest score for now */}
+										</div>
+										<div className="w-full bg-slate-200 rounded-full h-3">
+											<div 
+												className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all duration-1000 ease-out"
+												style={currentScore >= 0 ? { width: `${(currentScore / 8) * 100}%` } : {width: 0}}
+											></div>
+										</div>
+									</div>
 
-      //         <div className="flex items-center justify-between mt-6">
-      //           <button
-      //             onClick={handlePrevious}
-      //             disabled={currentIndex === 0}
-      //             className="flex items-center gap-2 px-6 py-3 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition-colors"
-      //           >
-      //             <ChevronLeft className="w-5 h-5" />
-      //             Précédent
-      //           </button>
-      //           <button
-      //             onClick={handleReset}
-      //             className="flex items-center gap-2 px-6 py-3 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-xl transition-colors"
-      //           >
-      //             <RotateCcw className="w-5 h-5" />
-      //             Recommencer
-      //           </button>
-      //           <button
-      //             onClick={handleNext}
-      //             disabled={currentIndex === quizz.length - 1}
-      //             className="flex items-center gap-2 px-6 py-3 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition-colors"
-      //           >
-      //             Suivant
-      //             <ChevronRight className="w-5 h-5" />
-      //           </button>
-      //         </div>
-      //       </div>
-      //     </div>
-      //   )
+									<div className="mb-8">
+										<p className="text-xl text-slate-700 font-medium">
+											{currentScore === 8 ? (
+												<>🌟 Parfait ! Vous êtes un véritable expert !</>
+											) : currentScore >= 8 * 0.8 ? (
+												<>👍 Excellent ! Presque parfait !</>
+											) : currentScore >= 8 * 0.6 ? (
+												<>💪 Très bien ! Bonne performance !</>
+											) : currentScore >= 8 * 0.4 ? (
+												<>😊 Pas mal ! Continuez à progresser !</>
+											) : (
+												<>📚 Bon début ! L'entraînement fait le maître !</>
+											)}
+										</p>
+									</div>
+
+									<button
+										onClick={() => {
+											setCurrentIndex(0);
+											setIsEnded(false);
+											setCurrentScore(0);
+										}}
+										className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all transform hover:scale-105"
+									>
+										Recommencer le quiz
+									</button>
+								</div>
+							</div>
+						)}
+					</div>
+				)
 
       default:
         return (
